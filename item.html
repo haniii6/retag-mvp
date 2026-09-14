@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ReTag Item</title>
+  <style>
+    :root{--green:#245b43;--dark:#193e2e;--cream:#f6f7f2;--muted:#65716a;--line:#dfe6df}
+    *{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--cream);color:#17201c}.wrap{width:min(560px,calc(100% - 28px));margin:0 auto;padding:45px 0}.card{background:#fff;border:1px solid var(--line);border-radius:24px;padding:30px;box-shadow:0 18px 45px rgba(32,56,39,.08)}.brand{font-weight:800;font-size:24px;color:var(--green);margin-bottom:28px}.badge{display:inline-block;padding:6px 11px;border-radius:999px;background:#e8f1e8;color:var(--green);font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.7px}.icon{width:70px;height:70px;border-radius:18px;background:#e8eee5;display:grid;place-items:center;font-size:32px;margin:20px 0}h1{font-size:38px;line-height:1.1;margin:0 0 12px}p{color:var(--muted);line-height:1.6}.info{padding:18px;background:#f7f9f6;border-radius:14px;margin:22px 0}.info strong{display:block;font-size:18px;margin-bottom:4px}.btn{width:100%;padding:15px 18px;border:0;border-radius:999px;background:var(--green);color:#fff;font-weight:700;font-size:16px;cursor:pointer}.message{display:none;margin-top:18px;padding:16px;background:#e8f4e9;border-radius:14px;color:var(--dark)}.message.show{display:block}.small{font-size:12px;color:var(--muted);margin-top:18px}
+  </style>
+</head>
+<body>
+  <div class="wrap"><div class="card">
+    <div class="brand">↻ ReTag</div>
+    <span class="badge">ReTag ID: RT-000001</span>
+    <div class="icon">👛</div>
+    <h1>You found a ReTag item.</h1>
+    <p>The owner of this item has registered it with ReTag. Please help return it safely.</p>
+    <div class="info"><strong>Black Wallet</strong><span>Owner contact is protected by ReTag.</span></div>
+    <button class="btn" onclick="showMessage()">Contact the owner</button>
+    <div class="message" id="message">Thank you! In the full ReTag service, this button will open an anonymous message form so the owner can reply without exposing their private contact details. This demo is working locally on the public page.</div>
+    <div class="small">No app is required. This page is opened directly from the QR code.</div>
+  </div></div>
+  <script>function showMessage(){document.getElementById('message').classList.add('show')}</script>
+</body>
+</html>
