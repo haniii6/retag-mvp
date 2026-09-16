@@ -6,8 +6,8 @@
   <title>ReTag Owner Dashboard</title>
   <style>
     :root{--green:#245b43;--dark:#193e2e;--cream:#f6f7f2;--muted:#65716a;--line:#dfe6df;--white:#fff;--red:#8b332a}
-    *{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--cream);color:#17201c}.wrap{width:min(920px,calc(100% - 28px));margin:auto;padding:38px 0 60px}.top{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:24px}.brand{font-size:25px;font-weight:800;color:var(--green)}.top button,.btn{border:0;border-radius:999px;padding:11px 16px;font-weight:700;cursor:pointer}.top button{background:#e8efe7;color:var(--green)}.card{background:#fff;border:1px solid var(--line);border-radius:22px;padding:26px;box-shadow:0 16px 36px rgba(32,56,39,.07);margin-bottom:18px}h1{font-size:36px;line-height:1.1;margin:0 0 8px}h2{font-size:22px;margin:0 0 15px}.muted{color:var(--muted)}.auth-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.field{margin-bottom:14px}.field label{display:block;font-size:13px;font-weight:700;margin-bottom:6px}.field input{width:100%;padding:13px 14px;border:1px solid var(--line);border-radius:11px;font:inherit}.btn{width:100%;background:var(--green);color:#fff}.secondary{margin-top:9px;background:#eef3ed;color:var(--green)}.status{display:none;margin-top:14px;padding:13px 14px;border-radius:12px;line-height:1.45}.status.show{display:block}.success{background:#e8f4e9;color:var(--dark)}.error{background:#fff0ef;color:var(--red)}.hidden{display:none}.item-row,.message-row{border:1px solid var(--line);border-radius:15px;padding:16px;margin-top:12px}.item-head{display:flex;justify-content:space-between;gap:14px;align-items:center}.pill{padding:5px 9px;border-radius:999px;background:#e8f1e8;color:var(--green);font-size:12px;font-weight:700}.pill.lost{background:#fff2df;color:#80520e}.action-row{display:flex;gap:9px;flex-wrap:wrap;margin-top:13px}.small-btn{width:auto;padding:10px 13px}.message-text{white-space:pre-wrap;line-height:1.55;margin-top:10px}.meta{font-size:12px;color:var(--muted);margin-top:9px}.empty{padding:22px;border:1px dashed var(--line);border-radius:14px;color:var(--muted);text-align:center}.count{font-size:13px;color:var(--muted);margin-left:6px}
-    @media(max-width:700px){.auth-grid{grid-template-columns:1fr}.item-head{align-items:flex-start;flex-direction:column}.top{align-items:flex-start}}
+    *{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--cream);color:#17201c}.wrap{width:min(920px,calc(100% - 28px));margin:auto;padding:38px 0 60px}.top{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:24px}.brand{font-size:25px;font-weight:800;color:var(--green)}.top button,.btn{border:0;border-radius:999px;padding:11px 16px;font-weight:700;cursor:pointer}.top button{background:#e8efe7;color:var(--green)}.card{background:#fff;border:1px solid var(--line);border-radius:22px;padding:26px;box-shadow:0 16px 36px rgba(32,56,39,.07);margin-bottom:18px}h1{font-size:36px;line-height:1.1;margin:0 0 8px}h2{font-size:22px;margin:0 0 15px}.muted{color:var(--muted)}.auth-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.field{margin-bottom:14px}.field label{display:block;font-size:13px;font-weight:700;margin-bottom:6px}.field input,.field select{width:100%;padding:13px 14px;border:1px solid var(--line);border-radius:11px;font:inherit;background:#fff}.btn{width:100%;background:var(--green);color:#fff}.secondary{margin-top:9px;background:#eef3ed;color:var(--green)}.status{display:none;margin-top:14px;padding:13px 14px;border-radius:12px;line-height:1.45}.status.show{display:block}.success{background:#e8f4e9;color:var(--dark)}.error{background:#fff0ef;color:var(--red)}.hidden{display:none}.item-row,.message-row{border:1px solid var(--line);border-radius:15px;padding:16px;margin-top:12px}.item-head{display:flex;justify-content:space-between;gap:14px;align-items:center}.pill{padding:5px 9px;border-radius:999px;background:#e8f1e8;color:var(--green);font-size:12px;font-weight:700}.pill.lost{background:#fff2df;color:#80520e}.action-row{display:flex;gap:9px;flex-wrap:wrap;margin-top:13px}.small-btn{width:auto;padding:10px 13px}.message-text{white-space:pre-wrap;line-height:1.55;margin-top:10px}.meta{font-size:12px;color:var(--muted);margin-top:9px}.empty{padding:22px;border:1px dashed var(--line);border-radius:14px;color:var(--muted);text-align:center}.count{font-size:13px;color:var(--muted);margin-left:6px}.create-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.tag-link{font-size:13px;word-break:break-all;color:var(--green)}
+    @media(max-width:700px){.auth-grid,.create-grid{grid-template-columns:1fr}.item-head{align-items:flex-start;flex-direction:column}.top{align-items:flex-start}}
   </style>
 </head>
 <body>
@@ -39,6 +39,19 @@
 
     <main id="dashboard" class="hidden">
       <section class="card">
+        <h2>Create a real ReTag ID</h2>
+        <p class="muted">Create an item, then share its public page or QR link with a real user for testing.</p>
+        <form id="createItemForm">
+          <div class="create-grid">
+            <div class="field"><label for="itemType">Item type</label><select id="itemType" required><option value="">Choose one</option><option>Phone</option><option>Wallet</option><option>Keys</option><option>Bag</option><option>Luggage</option><option>Pet</option><option>Other</option></select></div>
+            <div class="field"><label for="itemName">Item name</label><input id="itemName" maxlength="80" required placeholder="Black wallet"></div>
+          </div>
+          <button class="btn" id="createItemButton" type="submit">Create ReTag ID</button>
+        </form>
+        <div id="createStatus" class="status"></div>
+      </section>
+
+      <section class="card">
         <h2>Your ReTag IDs</h2>
         <p id="ownerEmail" class="muted"></p>
         <div id="itemsList"></div>
@@ -69,51 +82,37 @@
     const logoutButton = document.getElementById('logoutButton');
     const authStatus = document.getElementById('authStatus');
     const dashStatus = document.getElementById('dashStatus');
+    const createStatus = document.getElementById('createStatus');
     const ownerEmail = document.getElementById('ownerEmail');
     const itemsList = document.getElementById('itemsList');
     const messagesList = document.getElementById('messagesList');
     const claimBox = document.getElementById('claimBox');
     const claimButton = document.getElementById('claimButton');
     const messageCount = document.getElementById('messageCount');
-
     let currentUser = null;
     let items = [];
 
-    function showStatus(el, text, type) {
-      el.textContent = text;
-      el.className = 'status show ' + type;
-    }
+    function showStatus(el, text, type) { el.textContent = text; el.className = 'status show ' + type; }
     function clearStatus(el) { el.className = 'status'; el.textContent = ''; }
     function escapeHtml(value) { return String(value ?? '').replace(/[&<>'"]/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','\"':'&quot;'}[ch])); }
     function formatDate(value) { try { return new Date(value).toLocaleString(); } catch { return value; } }
+    function publicUrl(code) { return `${location.origin}${location.pathname.replace('owner.html','item.html')}?code=${encodeURIComponent(code)}`; }
+    function makeCode() { const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; let code='RT-'; for(let i=0;i<6;i++) code += chars[Math.floor(Math.random()*chars.length)]; return code; }
 
-    async function checkUser() {
-      const { data, error } = await supabase.auth.getUser();
-      if (error || !data.user) return null;
-      return data.user;
-    }
+    async function checkUser() { const { data, error } = await supabase.auth.getUser(); if (error || !data.user) return null; return data.user; }
 
     async function signUp(event) {
-      event.preventDefault();
-      clearStatus(authStatus);
+      event.preventDefault(); clearStatus(authStatus);
       const email = document.getElementById('signupEmail').value.trim();
       const password = document.getElementById('signupPassword').value;
-      const { error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: { emailRedirectTo: OWNER_REDIRECT }
-      });
-      if (error) {
-        showStatus(authStatus, error.message, 'error');
-        return;
-      }
+      const { error } = await supabase.auth.signUp({ email, password, options: { emailRedirectTo: OWNER_REDIRECT } });
+      if (error) { showStatus(authStatus, error.message, 'error'); return; }
       document.getElementById('loginEmail').value = email;
-      showStatus(authStatus, 'Account created. Check your email. After confirmation you will return to the ReTag owner dashboard.', 'success');
+      showStatus(authStatus, 'Account created. Check your email, confirm it, then return to the ReTag owner dashboard.', 'success');
     }
 
     async function signIn(event) {
-      event.preventDefault();
-      clearStatus(authStatus);
+      event.preventDefault(); clearStatus(authStatus);
       const email = document.getElementById('loginEmail').value.trim();
       const password = document.getElementById('loginPassword').value;
       const { error } = await supabase.auth.signInWithPassword({ email, password });
@@ -122,91 +121,87 @@
     }
 
     async function showDashboard() {
-      currentUser = await checkUser();
-      if (!currentUser) return;
-      authCard.classList.add('hidden');
-      dashboard.classList.remove('hidden');
-      logoutButton.classList.remove('hidden');
+      currentUser = await checkUser(); if (!currentUser) return;
+      authCard.classList.add('hidden'); dashboard.classList.remove('hidden'); logoutButton.classList.remove('hidden');
       ownerEmail.textContent = currentUser.email ? `Signed in as ${currentUser.email}` : 'Signed in';
-      await loadItems();
-      await loadMessages();
+      await loadItems(); await loadMessages();
     }
 
     async function loadItems() {
       clearStatus(dashStatus);
-      const { data, error } = await supabase.from('items').select('id,code,is_lost').eq('owner_id', currentUser.id).order('code');
+      const { data, error } = await supabase.from('items').select('id,code,item_name,item_type,is_lost').eq('owner_id', currentUser.id).order('created_at', { ascending: false });
       if (error) { showStatus(dashStatus, error.message, 'error'); return; }
-      items = data || [];
-      renderItems();
+      items = data || []; renderItems();
     }
 
     function renderItems() {
       if (!items.length) {
-        itemsList.innerHTML = '<div class="empty">No ReTag IDs are attached to this account yet.</div>';
-        claimBox.classList.remove('hidden');
-        claimButton.classList.remove('hidden');
-        return;
+        itemsList.innerHTML = '<div class="empty">No ReTag IDs are attached to this account yet. Create one above.</div>';
+        claimBox.classList.remove('hidden'); claimButton.classList.remove('hidden'); return;
       }
-      claimBox.classList.add('hidden');
-      claimButton.classList.add('hidden');
-      itemsList.innerHTML = items.map(item => `
-        <div class="item-row">
-          <div class="item-head"><div><strong>${escapeHtml(item.code)}</strong></div><span class="pill ${item.is_lost ? 'lost' : ''}">${item.is_lost ? 'LOST' : 'ACTIVE'}</span></div>
-          <div class="action-row">
-            <button class="btn small-btn" type="button" data-toggle="${item.id}" data-lost="${item.is_lost}">${item.is_lost ? 'Mark found' : 'Mark lost'}</button>
-            <a class="btn secondary small-btn" href="./item.html?code=${encodeURIComponent(item.code)}" target="_blank">Open public page</a>
-          </div>
-        </div>`).join('');
-      itemsList.querySelectorAll('[data-toggle]').forEach(button => {
-        button.addEventListener('click', async () => {
-          const itemId = button.getAttribute('data-toggle');
-          const nextLost = button.getAttribute('data-lost') !== 'true';
-          button.disabled = true;
-          const { error } = await supabase.from('items').update({ is_lost: nextLost, updated_at: new Date().toISOString() }).eq('id', itemId);
-          button.disabled = false;
-          if (error) showStatus(dashStatus, error.message, 'error'); else await loadItems();
-        });
-      });
+      claimBox.classList.add('hidden'); claimButton.classList.add('hidden');
+      itemsList.innerHTML = items.map(item => {
+        const url = publicUrl(item.code);
+        return `<div class="item-row"><div class="item-head"><div><strong>${escapeHtml(item.code)}</strong><div class="muted">${escapeHtml(item.item_name || 'ReTag item')} · ${escapeHtml(item.item_type || 'Item')}</div></div><span class="pill ${item.is_lost ? 'lost' : ''}">${item.is_lost ? 'LOST' : 'ACTIVE'}</span></div><div class="tag-link" style="margin-top:10px">${escapeHtml(url)}</div><div class="action-row"><button class="btn small-btn" type="button" data-toggle="${item.id}" data-lost="${item.is_lost}">${item.is_lost ? 'Mark found' : 'Mark lost'}</button><a class="btn secondary small-btn" href="${escapeHtml(url)}" target="_blank">Open public page</a><button class="btn secondary small-btn" type="button" data-copy="${escapeHtml(url)}">Copy link</button></div></div>`;
+      }).join('');
+      itemsList.querySelectorAll('[data-toggle]').forEach(button => button.addEventListener('click', async () => {
+        const itemId=button.getAttribute('data-toggle'); const nextLost=button.getAttribute('data-lost') !== 'true'; button.disabled=true;
+        const { error } = await supabase.from('items').update({is_lost:nextLost,updated_at:new Date().toISOString()}).eq('id',itemId); button.disabled=false;
+        if(error) showStatus(dashStatus,error.message,'error'); else { await loadItems(); await loadMessages(); }
+      }));
+      itemsList.querySelectorAll('[data-copy]').forEach(button => button.addEventListener('click', async () => {
+        try { await navigator.clipboard.writeText(button.getAttribute('data-copy')); button.textContent='Copied'; setTimeout(()=>button.textContent='Copy link',1200); } catch { showStatus(dashStatus,'Copy failed. You can copy the link manually.','error'); }
+      }));
+    }
+
+    async function createItem(event) {
+      event.preventDefault(); clearStatus(createStatus);
+      const button = document.getElementById('createItemButton');
+      const itemName = document.getElementById('itemName').value.trim();
+      const itemType = document.getElementById('itemType').value;
+      button.disabled = true; button.textContent='Creating...';
+      let created = null;
+      for (let attempt=0; attempt<3 && !created; attempt++) {
+        const code = makeCode();
+        const { data, error } = await supabase.from('items').insert({code,item_name:itemName,item_type:itemType,owner_id:currentUser.id,is_lost:false}).select('id,code,item_name,item_type,is_lost').single();
+        if (!error) { created=data; break; }
+        if (!String(error.message || '').toLowerCase().includes('duplicate')) { showStatus(createStatus,error.message,'error'); break; }
+      }
+      button.disabled=false; button.textContent='Create ReTag ID';
+      if (!created) return;
+      document.getElementById('createItemForm').reset();
+      const url=publicUrl(created.code);
+      showStatus(createStatus, `Created ${created.code}. Public page: ${url}`, 'success');
+      await loadItems(); await loadMessages();
     }
 
     async function claimDemo() {
-      claimButton.disabled = true;
-      clearStatus(dashStatus);
-      const { data, error } = await supabase.from('items').update({ owner_id: currentUser.id, updated_at: new Date().toISOString() }).eq('code', 'RT-000001').is('owner_id', null).select('id,code,is_lost').maybeSingle();
-      claimButton.disabled = false;
-      if (error) { showStatus(dashStatus, error.message, 'error'); return; }
-      if (!data) { showStatus(dashStatus, 'This ID is already linked to another account, or it is unavailable.', 'error'); await loadItems(); return; }
-      showStatus(dashStatus, 'RT-000001 is now linked to your account.', 'success');
-      await loadItems();
-      await loadMessages();
+      claimButton.disabled = true; clearStatus(dashStatus);
+      const { data, error } = await supabase.from('items').update({ owner_id: currentUser.id, updated_at: new Date().toISOString() }).eq('code','RT-000001').is('owner_id',null).select('id,code,is_lost').maybeSingle();
+      claimButton.disabled=false;
+      if(error){showStatus(dashStatus,error.message,'error');return;}
+      if(!data){showStatus(dashStatus,'This ID is already linked to another account, or it is unavailable.','error');await loadItems();return;}
+      showStatus(dashStatus,'RT-000001 is now linked to your account.','success'); await loadItems(); await loadMessages();
     }
 
     async function loadMessages() {
-      const { data, error } = await supabase.from('messages').select('id,item_id,finder_name,finder_contact,finder_message,created_at').order('created_at', { ascending: false });
-      if (error) { showStatus(dashStatus, error.message, 'error'); return; }
-      const rows = data || [];
-      messageCount.textContent = rows.length ? `(${rows.length})` : '';
-      if (!rows.length) { messagesList.innerHTML = '<div class="empty">No messages yet.</div>'; return; }
-      const codeById = new Map(items.map(item => [item.id, item.code]));
-      messagesList.innerHTML = rows.map(row => `
-        <div class="message-row"><strong>${escapeHtml(codeById.get(row.item_id) || 'ReTag item')}</strong><div class="message-text">${escapeHtml(row.finder_message)}</div><div class="meta">From: ${escapeHtml(row.finder_name || 'Anonymous')} · ${escapeHtml(row.finder_contact || 'No contact provided')} · ${escapeHtml(formatDate(row.created_at))}</div></div>`).join('');
+      const { data, error } = await supabase.from('messages').select('id,item_id,finder_name,finder_contact,finder_message,created_at').order('created_at',{ascending:false});
+      if(error){showStatus(dashStatus,error.message,'error');return;}
+      const rows=data||[]; messageCount.textContent=rows.length?`(${rows.length})`:'';
+      if(!rows.length){messagesList.innerHTML='<div class="empty">No messages yet.</div>';return;}
+      const codeById=new Map(items.map(item=>[item.id,item.code]));
+      messagesList.innerHTML=rows.map(row=>`<div class="message-row"><strong>${escapeHtml(codeById.get(row.item_id)||'ReTag item')}</strong><div class="message-text">${escapeHtml(row.finder_message)}</div><div class="meta">From: ${escapeHtml(row.finder_name||'Anonymous')} · ${escapeHtml(row.finder_contact||'No contact provided')} · ${escapeHtml(formatDate(row.created_at))}</div></div>`).join('');
     }
 
-    async function signOut() {
-      await supabase.auth.signOut();
-      currentUser = null; items = [];
-      dashboard.classList.add('hidden'); authCard.classList.remove('hidden'); logoutButton.classList.add('hidden');
-      clearStatus(dashStatus); clearStatus(authStatus);
-    }
+    async function signOut(){await supabase.auth.signOut();currentUser=null;items=[];dashboard.classList.add('hidden');authCard.classList.remove('hidden');logoutButton.classList.add('hidden');clearStatus(dashStatus);clearStatus(createStatus);clearStatus(authStatus);}
 
-    document.getElementById('signupForm').addEventListener('submit', signUp);
-    document.getElementById('loginForm').addEventListener('submit', signIn);
-    claimButton.addEventListener('click', claimDemo);
-    document.getElementById('refreshButton').addEventListener('click', async () => { await loadItems(); await loadMessages(); });
-    logoutButton.addEventListener('click', signOut);
-
-    const existingUser = await checkUser();
-    if (existingUser) await showDashboard();
+    document.getElementById('signupForm').addEventListener('submit',signUp);
+    document.getElementById('loginForm').addEventListener('submit',signIn);
+    document.getElementById('createItemForm').addEventListener('submit',createItem);
+    claimButton.addEventListener('click',claimDemo);
+    document.getElementById('refreshButton').addEventListener('click',async()=>{await loadItems();await loadMessages();});
+    logoutButton.addEventListener('click',signOut);
+    const existingUser=await checkUser(); if(existingUser) await showDashboard();
   </script>
 </body>
 </html>
