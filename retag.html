@@ -30,7 +30,7 @@
   <footer><div class="container footer-inner"><div class="logo"><span class="logo-mark">↻</span>ReTag</div><p>© 2026 ReTag. MVP concept.</p></div></footer>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <script>
-    const itemUrl = 'https://haniii6.github.io/retag-mvp/item.html?id=RT-000001';
+    const itemUrl = 'https://haniii6.github.io/retag-mvp/item.html?code=RT-000001';
     new QRCode(document.getElementById('qrcode'), {text:itemUrl,width:206,height:206,colorDark:'#17201c',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.M});
     function scrollToDemo(){document.getElementById('demo').scrollIntoView({behavior:'smooth'})}
     document.getElementById('demoForm').addEventListener('submit',function(e){e.preventDefault();const itemType=document.getElementById('itemType').value;const itemName=document.getElementById('itemName').value.trim();document.getElementById('formResult').textContent='Demo ready! Your '+itemType+' ID for "'+itemName+'" would be created here. The public QR demo is RT-000001.';document.getElementById('formResult').classList.add('visible')});
