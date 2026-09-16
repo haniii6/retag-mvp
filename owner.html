@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ReTag Owner Dashboard</title>
+  <style>
+    :root{--green:#245b43;--dark:#193e2e;--cream:#f6f7f2;--muted:#65716a;--line:#dfe6df;--white:#fff;--red:#8b332a}
+    *{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--cream);color:#17201c}.wrap{width:min(920px,calc(100% - 28px));margin:auto;padding:38px 0 60px}.top{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:24px}.brand{font-size:25px;font-weight:800;color:var(--green)}.top button,.btn{border:0;border-radius:999px;padding:11px 16px;font-weight:700;cursor:pointer}.top button{background:#e8efe7;color:var(--green)}.card{background:#fff;border:1px solid var(--line);border-radius:22px;padding:26px;box-shadow:0 16px 36px rgba(32,56,39,.07);margin-bottom:18px}h1{font-size:36px;line-height:1.1;margin:0 0 8px}h2{font-size:22px;margin:0 0 15px}.muted{color:var(--muted)}.auth-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.field{margin-bottom:14px}.field label{display:block;font-size:13px;font-weight:700;margin-bottom:6px}.field input{width:100%;padding:13px 14px;border:1px solid var(--line);border-radius:11px;font:inherit}.btn{width:100%;background:var(--green);color:#fff}.secondary{margin-top:9px;background:#eef3ed;color:var(--green)}.status{display:none;margin-top:14px;padding:13px 14px;border-radius:12px;line-height:1.45}.status.show{display:block}.success{background:#e8f4e9;color:var(--dark)}.error{background:#fff0ef;color:var(--red)}.hidden{display:none}.item-row,.message-row{border:1px solid var(--line);border-radius:15px;padding:16px;margin-top:12px}.item-head{display:flex;justify-content:space-between;gap:14px;align-items:center}.pill{padding:5px 9px;border-radius:999px;background:#e8f1e8;color:var(--green);font-size:12px;font-weight:700}.pill.lost{background:#fff2df;color:#80520e}.action-row{display:flex;gap:9px;flex-wrap:wrap;margin-top:13px}.small-btn{width:auto;padding:10px 13px}.message-text{white-space:pre-wrap;line-height:1.55;margin-top:10px}.meta{font-size:12px;color:var(--muted);margin-top:9px}.empty{padding:22px;border:1px dashed var(--line);border-radius:14px;color:var(--muted);text-align:center}.count{font-size:13px;color:var(--muted);margin-left:6px}
+    @media(max-width:700px){.auth-grid{grid-template-columns:1fr}.item-head{align-items:flex-start;flex-direction:column}.top{align-items:flex-start}}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="top">
+      <div class="brand">↻ ReTag · Owner</div>
+      <button id="logoutButton" class="hidden" type="button">Sign out</button>
+    </div>
+
+    <section id="authCard" class="card">
+      <h1>Owner dashboard</h1>
+      <p class="muted">Create your owner account or sign in to see messages sent by people who find your ReTag item.</p>
+      <div class="auth-grid">
+        <form id="signupForm">
+          <h2>Create account</h2>
+          <div class="field"><label for="signupEmail">Email</label><input id="signupEmail" type="email" required placeholder="you@example.com"></div>
+          <div class="field"><label for="signupPassword">Password</label><input id="signupPassword" type="password" minlength="6" required placeholder="At least 6 characters"></div>
+          <button class="btn" type="submit">Create account</button>
+        </form>
+        <form id="loginForm">
+          <h2>Sign in</h2>
+          <div class="field"><label for="loginEmail">Email</label><input id="loginEmail" type="email" required placeholder="you@example.com"></div>
+          <div class="field"><label for="loginPassword">Password</label><input id="loginPassword" type="password" required placeholder="Your password"></div>
+          <button class="btn" type="submit">Sign in</button>
+        </form>
+      </div>
+      <div id="authStatus" class="status"></div>
+    </section>
+
+    <main id="dashboard" class="hidden">
+      <section class="card">
+        <h2>Your ReTag IDs</h2>
+        <p id="ownerEmail" class="muted"></p>
+        <div id="itemsList"></div>
+        <div id="claimBox" class="empty hidden">Your demo ID <strong>RT-000001</strong> is available. Claim it for this account.</div>
+        <button id="claimButton" class="btn hidden" type="button" style="margin-top:12px">Claim RT-000001</button>
+      </section>
+
+      <section class="card">
+        <h2>Messages <span id="messageCount" class="count"></span></h2>
+        <button id="refreshButton" class="btn secondary small-btn" type="button">Refresh messages</button>
+        <div id="messagesList" style="margin-top:12px"></div>
+      </section>
+
+      <div id="dashStatus" class="status"></div>
+    </main>
+  </div>
+
+  <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+
+    const SUPABASE_URL = 'https://hrfpbastnumyinvmiaqf.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_tnvQHJj6rEDOKlSJLGHM-A_-Xdy2d0X';
+    const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    const authCard = document.getElementById('authCard');
+    const dashboard = document.getElementById('dashboard');
+    const logoutButton = document.getElementById('logoutButton');
+    const authStatus = document.getElementById('authStatus');
+    const dashStatus = document.getElementById('dashStatus');
+    const ownerEmail = document.getElementById('ownerEmail');
+    const itemsList = document.getElementById('itemsList');
+    const messagesList = document.getElementById('messagesList');
+    const claimBox = document.getElementById('claimBox');
+    const claimButton = document.getElementById('claimButton');
+    const messageCount = document.getElementById('messageCount');
+
+    let currentUser = null;
+    let items = [];
+
+    function showStatus(el, text, type) {
+      el.textContent = text;
+      el.className = 'status show ' + type;
+    }
+
+    function clearStatus(el) {
+      el.className = 'status';
+      el.textContent = '';
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? '').replace(/[&<>'"]/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','\"':'&quot;'}[ch]));
+    }
+
+    function formatDate(value) {
+      try { return new Date(value).toLocaleString(); } catch { return value; }
+    }
+
+    async function checkUser() {
+      const { data, error } = await supabase.auth.getUser();
+      if (error || !data.user) return null;
+      return data.user;
+    }
+
+    async function signUp(event) {
+      event.preventDefault();
+      clearStatus(authStatus);
+      const email = document.getElementById('signupEmail').value.trim();
+      const password = document.getElementById('signupPassword').value;
+      const { error } = await supabase.auth.signUp({ email, password });
+      if (error) {
+        showStatus(authStatus, error.message, 'error');
+        return;
+      }
+      document.getElementById('loginEmail').value = email;
+      showStatus(authStatus, 'Account created. Check your email to confirm the account, then sign in here.', 'success');
+    }
+
+    async function signIn(event) {
+      event.preventDefault();
+      clearStatus(authStatus);
+      const email = document.getElementById('loginEmail').value.trim();
+      const password = document.getElementById('loginPassword').value;
+      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) {
+        showStatus(authStatus, error.message, 'error');
+        return;
+      }
+      await showDashboard();
+    }
+
+    async function showDashboard() {
+      currentUser = await checkUser();
+      if (!currentUser) return;
+      authCard.classList.add('hidden');
+      dashboard.classList.remove('hidden');
+      logoutButton.classList.remove('hidden');
+      ownerEmail.textContent = currentUser.email ? `Signed in as ${currentUser.email}` : 'Signed in';
+      await loadItems();
+      await loadMessages();
+    }
+
+    async function loadItems() {
+      clearStatus(dashStatus);
+      const { data, error } = await supabase.from('items').select('id,code,is_lost').eq('owner_id', currentUser.id).order('code');
+      if (error) {
+        showStatus(dashStatus, error.message, 'error');
+        return;
+      }
+      items = data || [];
+      renderItems();
+    }
+
+    function renderItems() {
+      if (!items.length) {
+        itemsList.innerHTML = '<div class="empty">No ReTag IDs are attached to this account yet.</div>';
+        claimBox.classList.remove('hidden');
+        claimButton.classList.remove('hidden');
+        return;
+      }
+      claimBox.classList.add('hidden');
+      claimButton.classList.add('hidden');
+      itemsList.innerHTML = items.map(item => `
+        <div class="item-row">
+          <div class="item-head">
+            <div><strong>${escapeHtml(item.code)}</strong></div>
+            <span class="pill ${item.is_lost ? 'lost' : ''}">${item.is_lost ? 'LOST' : 'ACTIVE'}</span>
+          </div>
+          <div class="action-row">
+            <button class="btn small-btn" type="button" data-toggle="${item.id}" data-lost="${item.is_lost}">${item.is_lost ? 'Mark found' : 'Mark lost'}</button>
+            <a class="btn secondary small-btn" href="./item.html?code=${encodeURIComponent(item.code)}" target="_blank">Open public page</a>
+          </div>
+        </div>`).join('');
+      itemsList.querySelectorAll('[data-toggle]').forEach(button => {
+        button.addEventListener('click', async () => {
+          const itemId = button.getAttribute('data-toggle');
+          const nextLost = button.getAttribute('data-lost') !== 'true';
+          button.disabled = true;
+          const { error } = await supabase.from('items').update({ is_lost: nextLost, updated_at: new Date().toISOString() }).eq('id', itemId);
+          button.disabled = false;
+          if (error) showStatus(dashStatus, error.message, 'error');
+          else await loadItems();
+        });
+      });
+    }
+
+    async function claimDemo() {
+      claimButton.disabled = true;
+      clearStatus(dashStatus);
+      const { data, error } = await supabase.from('items')
+        .update({ owner_id: currentUser.id, updated_at: new Date().toISOString() })
+        .eq('code', 'RT-000001')
+        .is('owner_id', null)
+        .select('id,code,is_lost')
+        .maybeSingle();
+      claimButton.disabled = false;
+      if (error) {
+        showStatus(dashStatus, error.message, 'error');
+        return;
+      }
+      if (!data) {
+        showStatus(dashStatus, 'This ID is already linked to another account, or it is unavailable.', 'error');
+        await loadItems();
+        return;
+      }
+      showStatus(dashStatus, 'RT-000001 is now linked to your account.', 'success');
+      await loadItems();
+      await loadMessages();
+    }
+
+    async function loadMessages() {
+      const { data, error } = await supabase.from('messages')
+        .select('id,item_id,finder_name,finder_contact,finder_message,created_at')
+        .order('created_at', { ascending: false });
+      if (error) {
+        showStatus(dashStatus, error.message, 'error');
+        return;
+      }
+      const rows = data || [];
+      messageCount.textContent = rows.length ? `(${rows.length})` : '';
+      if (!rows.length) {
+        messagesList.innerHTML = '<div class="empty">No messages yet.</div>';
+        return;
+      }
+      const codeById = new Map(items.map(item => [item.id, item.code]));
+      messagesList.innerHTML = rows.map(row => `
+        <div class="message-row">
+          <strong>${escapeHtml(codeById.get(row.item_id) || 'ReTag item')}</strong>
+          <div class="message-text">${escapeHtml(row.finder_message)}</div>
+          <div class="meta">From: ${escapeHtml(row.finder_name || 'Anonymous')} · ${escapeHtml(row.finder_contact || 'No contact provided')} · ${escapeHtml(formatDate(row.created_at))}</div>
+        </div>`).join('');
+    }
+
+    async function signOut() {
+      await supabase.auth.signOut();
+      currentUser = null;
+      items = [];
+      dashboard.classList.add('hidden');
+      authCard.classList.remove('hidden');
+      logoutButton.classList.add('hidden');
+      clearStatus(dashStatus);
+      clearStatus(authStatus);
+    }
+
+    document.getElementById('signupForm').addEventListener('submit', signUp);
+    document.getElementById('loginForm').addEventListener('submit', signIn);
+    claimButton.addEventListener('click', claimDemo);
+    document.getElementById('refreshButton').addEventListener('click', async () => { await loadItems(); await loadMessages(); });
+    logoutButton.addEventListener('click', signOut);
+
+    const existingUser = await checkUser();
+    if (existingUser) await showDashboard();
+  </script>
+</body>
+</html>
